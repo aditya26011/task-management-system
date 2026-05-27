@@ -2,6 +2,7 @@ package com.aditya.tutorial.controllers;
 
 import com.aditya.tutorial.dto.UserDto;
 import com.aditya.tutorial.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<UserDto> createEmployee(@RequestBody UserDto userDto){
+    public ResponseEntity<UserDto> createEmployee(@Valid  @RequestBody UserDto userDto){
          UserDto user=userService.createEmployee(userDto);
 
          return new ResponseEntity<>(user, HttpStatus.CREATED);

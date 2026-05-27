@@ -4,8 +4,12 @@ package com.aditya.tutorial.advice;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -17,5 +21,22 @@ public class GlobalExceptionHandler {
         apiError.setHttpStatus(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(apiError,HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiError> handleValidationError(MethodArgumentNotValidException exception){
+      List<String>errorList= exception
+                .getBindingResult()
+                .getAllErrors()
+                .stream().
+                map((error)->error.getDefaultMessage())
+                .collect(Collectors.toList());
+
+      ApiError apiError=new ApiError();
+      apiError.setMessage(exception.getMessage());
+      apiError.setSubErrors(errorList);
+      apiError.setHttpStatus(HttpStatus.BAD_REQUEST);
+
+      return new ResponseEntity<>(apiError,HttpStatus.BAD_REQUEST);
     }
 }
