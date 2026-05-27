@@ -43,4 +43,9 @@ public class UserController {
       else
           return new ResponseEntity<>("failed to delete",HttpStatus.BAD_REQUEST);
     }
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserDto> UpdateEmployee( @RequestBody UserDto userDto, @PathVariable(value = "id") Long id){
+     UserDto updatedEmployee =  userService.UpdateEmployee(userDto,id);
+     return new ResponseEntity<>(updatedEmployee,HttpStatus.OK);
+    }
 }

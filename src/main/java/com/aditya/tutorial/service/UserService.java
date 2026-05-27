@@ -5,6 +5,7 @@ import com.aditya.tutorial.entity.User;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.exceptions.UserAlreadyExistsException;
 import com.aditya.tutorial.repo.UserRepo;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,17 @@ public class UserService {
         }else{
             return -1;
         }
+
+    }
+
+    public UserDto UpdateEmployee( UserDto userDto,Long id) {
+     User user = userRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("User with Id not found"));
+
+       user.setName(userDto.getName());
+
+     User updatedUser = userRepo.save(user);
+     return modelMapper.map(updatedUser,UserDto.class);
+
 
     }
 }
