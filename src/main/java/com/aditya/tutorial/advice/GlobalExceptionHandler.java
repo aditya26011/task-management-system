@@ -2,6 +2,7 @@ package com.aditya.tutorial.advice;
 
 
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
+import com.aditya.tutorial.exceptions.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,5 +39,14 @@ public class GlobalExceptionHandler {
       apiError.setHttpStatus(HttpStatus.BAD_REQUEST);
 
       return new ResponseEntity<>(apiError,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ApiError> handleUserAlreadyExistsException(UserAlreadyExistsException exception){
+        ApiError apiError=new ApiError();
+        apiError.setHttpStatus(HttpStatus.CONFLICT);
+        apiError.setMessage(exception.getMessage());
+
+        return new ResponseEntity<>(apiError,HttpStatus.CONFLICT);
     }
 }
