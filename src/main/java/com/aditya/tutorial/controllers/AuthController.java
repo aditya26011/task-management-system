@@ -1,5 +1,7 @@
 package com.aditya.tutorial.controllers;
 
+import com.aditya.tutorial.dto.LoginDto;
+import com.aditya.tutorial.dto.LoginResponseDto;
 import com.aditya.tutorial.dto.SignUpDto;
 import com.aditya.tutorial.dto.SignUpResponseDto;
 import com.aditya.tutorial.service.AuthService;
@@ -23,6 +25,13 @@ public class AuthController {
         SignUpResponseDto responseDto=authService.signUp(signUpDto);
 
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto){
+
+      String msg= authService.login(loginDto);
+      return new ResponseEntity<>(msg,HttpStatus.OK);
     }
 
 }

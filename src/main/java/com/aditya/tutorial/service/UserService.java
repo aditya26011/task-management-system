@@ -22,23 +22,23 @@ public class UserService {
     private final ModelMapper modelMapper;
 
 
-    public UserDto createEmployee(UserDto userDto) {
-       String email= userDto.getEmail();
-   Optional<User> sameEmail= userRepo.findByEmail(email);
-            if(sameEmail.isPresent()){
-                throw new UserAlreadyExistsException("user with same email exists");
-            }
-            else{
-                User user = modelMapper.map(userDto, User.class);
-                User savedUser = userRepo.save(user);
-
-                return modelMapper.map(savedUser, UserDto.class);
-            }
-
-
-
-
-    }
+//    public UserDto createEmployee(UserDto userDto) {
+//       String email= userDto.getEmail();
+//   Optional<User> sameEmail= userRepo.findByEmail(email);
+//            if(sameEmail.isPresent()){
+//                throw new UserAlreadyExistsException("user with same email exists");
+//            }
+//            else{
+//                User user = modelMapper.map(userDto, User.class);
+//                User savedUser = userRepo.save(user);
+//
+//                return modelMapper.map(savedUser, UserDto.class);
+//            }
+//
+//
+//
+//
+//    }
 
     public List<UserDto> getAll() {
 

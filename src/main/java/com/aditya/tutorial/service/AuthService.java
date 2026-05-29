@@ -1,11 +1,10 @@
 package com.aditya.tutorial.service;
 
 
-import com.aditya.tutorial.dto.SignUpDto;
-import com.aditya.tutorial.dto.SignUpResponseDto;
-import com.aditya.tutorial.dto.UserDto;
+import com.aditya.tutorial.dto.*;
 import com.aditya.tutorial.entity.Enums.Roles;
 import com.aditya.tutorial.entity.User;
+import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.exceptions.UserAlreadyExistsException;
 import com.aditya.tutorial.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +40,19 @@ public class AuthService {
             User savedUser = userRepo.save(user);
             return modelMapper.map(savedUser,SignUpResponseDto.class);
 
+        }
+
+    }
+
+    public String login(LoginDto loginDto) {
+      User user= userRepo.findByEmail(loginDto.getEmail())
+                .orElseThrow(()->new ResourceNotFoundException("user with this email doesn't exist"));
+
+        boolean matches = passwordEncoder.matches(loginDto.getPassword(), user.getPassword());
+        if(matches){
+           return  "login successfully";
+        }else{
+            throw new RuntimeException("Invalid Credentials");
         }
 
     }

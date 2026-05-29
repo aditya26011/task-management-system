@@ -17,12 +17,12 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/create")
-    public ResponseEntity<UserDto> createEmployee(@Valid  @RequestBody UserDto userDto){
-         UserDto user=userService.createEmployee(userDto);
-
-         return new ResponseEntity<>(user, HttpStatus.CREATED);
-    }
+//    @PostMapping("/create")
+//    public ResponseEntity<UserDto> createEmployee(@Valid  @RequestBody UserDto userDto){
+//         UserDto user=userService.createEmployee(userDto);
+//
+//         return new ResponseEntity<>(user, HttpStatus.CREATED);
+//    }
     @GetMapping()
     public ResponseEntity<List<UserDto>> getAll(){
         List<UserDto> userDtoList=userService.getAll();
