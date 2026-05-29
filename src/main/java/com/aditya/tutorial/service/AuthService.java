@@ -9,6 +9,9 @@ import com.aditya.tutorial.exceptions.UserAlreadyExistsException;
 import com.aditya.tutorial.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +27,8 @@ public class AuthService {
     private final UserRepo userRepo;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
-
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     public SignUpResponseDto signUp(SignUpDto signUpDto) {
         String email= signUpDto.getEmail();
@@ -45,15 +49,11 @@ public class AuthService {
     }
 
     public String login(LoginDto loginDto) {
-      User user= userRepo.findByEmail(loginDto.getEmail())
-                .orElseThrow(()->new ResourceNotFoundException("user with this email doesn't exist"));
+        Authentication authenticate = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
 
-        boolean matches = passwordEncoder.matches(loginDto.getPassword(), user.getPassword());
-        if(matches){
-           return  "login successfully";
-        }else{
-            throw new RuntimeException("Invalid Credentials");
-        }
+        User user= (User) authenticate.getPrincipal();
+        return jwtService.generateToken(user);
 
     }
 }
