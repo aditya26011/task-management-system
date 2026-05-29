@@ -5,6 +5,8 @@ import com.aditya.tutorial.dto.LoginResponseDto;
 import com.aditya.tutorial.dto.SignUpDto;
 import com.aditya.tutorial.dto.SignUpResponseDto;
 import com.aditya.tutorial.service.AuthService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +30,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletResponse response){
 
-      String msg= authService.login(loginDto);
-      return new ResponseEntity<>(msg,HttpStatus.OK);
+      String token= authService.login(loginDto);
+        Cookie cookie=new Cookie("token",token);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
+      return new ResponseEntity<>(token,HttpStatus.OK);
     }
 
 }
