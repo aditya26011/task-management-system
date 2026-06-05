@@ -1,6 +1,7 @@
 package com.aditya.tutorial.service;
 
 import com.aditya.tutorial.dto.UserDto;
+import com.aditya.tutorial.dto.UserResponseDto;
 import com.aditya.tutorial.entity.User;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.exceptions.UserAlreadyExistsException;
@@ -40,17 +41,17 @@ public class UserService {
 //
 //    }
 
-    public List<UserDto> getAll() {
+    public List<UserResponseDto> getAll() {
 
      List<User> users=userRepo.findAll();
 
-     return users.stream().map((element) -> modelMapper.map(element, UserDto.class)).collect(Collectors.toList());
+     return users.stream().map((element) -> modelMapper.map(element, UserResponseDto.class)).collect(Collectors.toList());
 
     }
 
-    public UserDto getEmpById(Long id) {
+    public UserResponseDto getEmpById(Long id) {
         User employee = userRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("User Not Found"));
-        return modelMapper.map(employee, UserDto.class);
+        return modelMapper.map(employee, UserResponseDto.class);
 
     }
 
@@ -65,13 +66,13 @@ public class UserService {
 
     }
 
-    public UserDto UpdateEmployee( UserDto userDto,Long id) {
+    public UserResponseDto UpdateEmployee( UserDto userDto,Long id) {
      User user = userRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("User with Id not found"));
 
        user.setName(userDto.getName());
 
      User updatedUser = userRepo.save(user);
-     return modelMapper.map(updatedUser,UserDto.class);
+     return modelMapper.map(updatedUser,UserResponseDto.class);
 
 
     }

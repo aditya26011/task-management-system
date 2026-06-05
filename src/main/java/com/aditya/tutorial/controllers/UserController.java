@@ -1,6 +1,7 @@
 package com.aditya.tutorial.controllers;
 
 import com.aditya.tutorial.dto.UserDto;
+import com.aditya.tutorial.dto.UserResponseDto;
 import com.aditya.tutorial.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +25,14 @@ public class UserController {
 //         return new ResponseEntity<>(user, HttpStatus.CREATED);
 //    }
     @GetMapping()
-    public ResponseEntity<List<UserDto>> getAll(){
-        List<UserDto> userDtoList=userService.getAll();
-        return new ResponseEntity<>(userDtoList,HttpStatus.FOUND);
+    public ResponseEntity<List<UserResponseDto>> getAll(){
+        List<UserResponseDto> userResponseDto=userService.getAll();
+        return new ResponseEntity<>(userResponseDto,HttpStatus.FOUND);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getEmpById(@PathVariable(value = "id") Long id){
-        UserDto user=userService.getEmpById(id);
+    public ResponseEntity<UserResponseDto> getEmpById(@PathVariable(value = "id") Long id){
+        UserResponseDto user=userService.getEmpById(id);
         return new ResponseEntity<>(user,HttpStatus.FOUND);
     }
 
@@ -44,8 +45,8 @@ public class UserController {
           return new ResponseEntity<>("failed to delete",HttpStatus.BAD_REQUEST);
     }
     @PatchMapping("/{id}")
-    public ResponseEntity<UserDto> UpdateEmployee( @RequestBody UserDto userDto, @PathVariable(value = "id") Long id){
-     UserDto updatedEmployee =  userService.UpdateEmployee(userDto,id);
+    public ResponseEntity<UserResponseDto> UpdateEmployee( @RequestBody UserDto userDto, @PathVariable(value = "id") Long id){
+        UserResponseDto updatedEmployee =  userService.UpdateEmployee(userDto,id);
      return new ResponseEntity<>(updatedEmployee,HttpStatus.OK);
     }
 }

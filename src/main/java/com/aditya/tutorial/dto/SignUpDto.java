@@ -27,6 +27,4 @@ public class SignUpDto {
     @Size(min = 7,max = 12,message = "Password should have min 7 chars and max 12")
     private String password;
 
-    @Enumerated(value = EnumType.STRING)
-    private Roles role;
 }
