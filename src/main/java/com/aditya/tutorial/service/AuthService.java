@@ -29,6 +29,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final UserDetailService userDetailService;
 
     public SignUpResponseDto signUp(SignUpDto signUpDto) {
         String email= signUpDto.getEmail();
@@ -48,12 +49,22 @@ public class AuthService {
 
     }
 
-    public String login(LoginDto loginDto) {
+    public LoginResponseDto login(LoginDto loginDto) {
         Authentication authenticate = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
 
         User user= (User) authenticate.getPrincipal();
-        return jwtService.generateToken(user);
+       String accessToken= jwtService.generateAccessToken(user);
+       String refreshToken= jwtService.generateRefreshToken(user);
+        return new LoginResponseDto(user.getId(),user.getEmail(),accessToken,refreshToken);
+    }
+
+    public LoginResponseDto refreshToken(String refreshToken) {
+        Long userId=jwtService.getUserIdFromToken(refreshToken);
+        User user=userDetailService.getUserById(userId);
+
+        String accessToken= jwtService.generateAccessToken(user);
+        return new LoginResponseDto(user.getId(),user.getEmail(),accessToken,refreshToken);
 
     }
 }

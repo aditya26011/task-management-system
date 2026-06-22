@@ -26,7 +26,7 @@ public class SecurityConfig{
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.authorizeHttpRequests(auth->
                 //Auth APIs
-                auth.requestMatchers("/auth/login","/auth/signup")
+                auth.requestMatchers("/auth/**")
                         .permitAll()
 
                         //Admin APIs
