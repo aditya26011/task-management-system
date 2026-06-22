@@ -2,6 +2,7 @@ package com.aditya.tutorial.controllers;
 
 import com.aditya.tutorial.dto.UserDto;
 import com.aditya.tutorial.dto.UserResponseDto;
+import com.aditya.tutorial.dto.UserRoleRequestDto;
 import com.aditya.tutorial.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -48,5 +49,14 @@ public class UserController {
     public ResponseEntity<UserResponseDto> UpdateEmployee( @RequestBody UserDto userDto, @PathVariable(value = "id") Long id){
         UserResponseDto updatedEmployee =  userService.UpdateEmployee(userDto,id);
      return new ResponseEntity<>(updatedEmployee,HttpStatus.OK);
+    }
+
+    @PatchMapping("{id}/role")
+    public ResponseEntity<UserResponseDto> updateEmployeeRole(@RequestBody UserRoleRequestDto userRoleRequestDto,
+                                                              @PathVariable(value = "id") Long id){
+
+        UserResponseDto updatedEmployeeData=userService.updateEmployeeRole(userRoleRequestDto,id);
+        return new ResponseEntity<>(updatedEmployeeData,HttpStatus.OK);
+
     }
 }

@@ -2,7 +2,10 @@ package com.aditya.tutorial.service;
 
 import com.aditya.tutorial.dto.UserDto;
 import com.aditya.tutorial.dto.UserResponseDto;
+import com.aditya.tutorial.dto.UserRoleRequestDto;
+import com.aditya.tutorial.entity.Enums.Roles;
 import com.aditya.tutorial.entity.User;
+import com.aditya.tutorial.exceptions.AdminRoleException;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.exceptions.UserAlreadyExistsException;
 import com.aditya.tutorial.repo.UserRepo;
@@ -75,5 +78,17 @@ public class UserService {
      return modelMapper.map(updatedUser,UserResponseDto.class);
 
 
+    }
+
+    public UserResponseDto updateEmployeeRole(UserRoleRequestDto userRoleRequestDto, Long id) {
+        User user = userRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("User with Id now found"));
+
+        if(user.getRole()!= Roles.ADMIN){
+            user.setRole(userRoleRequestDto.getRole());
+        }else{
+            throw new AdminRoleException("Admin role cannot be changed");
+        }
+        User save = userRepo.save(user);
+        return  modelMapper.map(save,UserResponseDto.class);
     }
 }
