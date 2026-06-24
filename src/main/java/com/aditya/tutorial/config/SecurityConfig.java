@@ -36,6 +36,15 @@ public class SecurityConfig{
                         .requestMatchers(HttpMethod.DELETE,"/user/**")
                         .hasRole(ADMIN.name())
 
+                        //Managers
+                        .requestMatchers(HttpMethod.POST,"/teams/**")
+                        .hasRole(MANAGER.name())
+                        .requestMatchers(HttpMethod.GET,"/teams/**")
+                        .hasRole(MANAGER.name())
+                        .requestMatchers(HttpMethod.DELETE,"/teams/**")
+                        .hasRole(MANAGER.name())
+
+
                         //All authenticated user
                         .requestMatchers(HttpMethod.GET,"/user/**")
                         .hasAnyRole(ADMIN.name(), MANAGER.name(), EMPLOYEE.name())
