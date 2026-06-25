@@ -1,6 +1,7 @@
 package com.aditya.tutorial.dto;
 
 import com.aditya.tutorial.entity.Enums.Roles;
+import com.aditya.tutorial.entity.Team;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
@@ -21,6 +22,7 @@ public class UserResponseDto {
     private String email;
 
     private Roles role;
+    private Long teamId;
 
     private LocalDateTime created_at;
 }

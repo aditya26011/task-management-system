@@ -1,19 +1,23 @@
 package com.aditya.tutorial.service;
 
+import com.aditya.tutorial.dto.AddTeamDto;
 import com.aditya.tutorial.dto.UserDto;
 import com.aditya.tutorial.dto.UserResponseDto;
 import com.aditya.tutorial.dto.UserRoleRequestDto;
 import com.aditya.tutorial.entity.Enums.Roles;
+import com.aditya.tutorial.entity.Team;
 import com.aditya.tutorial.entity.User;
 import com.aditya.tutorial.exceptions.AdminRoleException;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.exceptions.UserAlreadyExistsException;
+import com.aditya.tutorial.repo.TeamRepo;
 import com.aditya.tutorial.repo.UserRepo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +28,7 @@ public class UserService {
 
     private final UserRepo userRepo;
     private final ModelMapper modelMapper;
+    private final TeamRepo teamRepo;
 
 
 //    public UserDto createEmployee(UserDto userDto) {
@@ -90,5 +95,14 @@ public class UserService {
         }
         User save = userRepo.save(user);
         return  modelMapper.map(save,UserResponseDto.class);
+    }
+
+    public UserResponseDto addEmpToTeam(AddTeamDto addTeamDto, Long id) {
+      User user= userRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("User with Id not found"));
+        Team team = teamRepo.findById(addTeamDto.getTeamId()).orElseThrow(()-> new ResourceNotFoundException("Team Not found"));
+
+        user.setTeam(team);
+        User savedUser = userRepo.save(user);
+        return modelMapper.map(savedUser,UserResponseDto.class);
     }
 }

@@ -38,6 +38,10 @@ public class User implements UserDetails {
     @CreationTimestamp
     private LocalDateTime created_at;
 
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team; //fk team cannot exist without user
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
          return Collections.singleton(new SimpleGrantedAuthority("ROLE_"+role.name()));

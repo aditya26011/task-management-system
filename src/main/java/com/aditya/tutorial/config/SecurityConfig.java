@@ -30,8 +30,8 @@ public class SecurityConfig{
                         .permitAll()
 
                         //Admin APIs
-                        .requestMatchers(HttpMethod.PATCH,"/user/**")
-                        .hasRole(ADMIN.name())
+//                        .requestMatchers(HttpMethod.PATCH,"/user/**")
+//                        .hasRole(ADMIN.name())
 
                         .requestMatchers(HttpMethod.DELETE,"/user/**")
                         .hasRole(ADMIN.name())
@@ -43,7 +43,8 @@ public class SecurityConfig{
                         .hasRole(MANAGER.name())
                         .requestMatchers(HttpMethod.DELETE,"/teams/**")
                         .hasRole(MANAGER.name())
-
+                        .requestMatchers(HttpMethod.PATCH,"/user/**")
+                        .hasRole(MANAGER.name())
 
                         //All authenticated user
                         .requestMatchers(HttpMethod.GET,"/user/**")

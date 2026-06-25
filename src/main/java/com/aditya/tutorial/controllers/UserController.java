@@ -1,5 +1,6 @@
 package com.aditya.tutorial.controllers;
 
+import com.aditya.tutorial.dto.AddTeamDto;
 import com.aditya.tutorial.dto.UserDto;
 import com.aditya.tutorial.dto.UserResponseDto;
 import com.aditya.tutorial.dto.UserRoleRequestDto;
@@ -57,6 +58,15 @@ public class UserController {
 
         UserResponseDto updatedEmployeeData=userService.updateEmployeeRole(userRoleRequestDto,id);
         return new ResponseEntity<>(updatedEmployeeData,HttpStatus.OK);
+
+    }
+
+    @PatchMapping("/{id}/assign-team")
+    public ResponseEntity<UserResponseDto> addEmpToTeam(@RequestBody AddTeamDto addTeamDto,
+                                                        @PathVariable("id")Long id){
+
+        UserResponseDto updatedUser=userService.addEmpToTeam(addTeamDto,id);
+        return ResponseEntity.ok(updatedUser);
 
     }
 }
