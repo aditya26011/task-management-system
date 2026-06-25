@@ -1,6 +1,7 @@
 package com.aditya.tutorial.dto;
 
 
+import com.aditya.tutorial.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,5 +23,7 @@ public class TeamResponseDto {
     private String description;
 
     private Timestamp created_at;
+
+    private List<TeamMemberDto> users;
 }
 

@@ -1,7 +1,11 @@
 package com.aditya.tutorial.service;
 
+import com.aditya.tutorial.dto.TeamMemberDto;
 import com.aditya.tutorial.dto.TeamResponseDto;
+import com.aditya.tutorial.dto.UserDto;
 import com.aditya.tutorial.entity.Team;
+import com.aditya.tutorial.entity.User;
+import com.aditya.tutorial.exceptions.InvalidRequestException;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.repo.TeamRepo;
 import lombok.RequiredArgsConstructor;
@@ -30,24 +34,48 @@ public class TeamService {
     }
 
     public List<TeamResponseDto> getAllTeams() {
-        List<Team> listOfTeams = teamRepo.findAll();
-        return listOfTeams.stream().map(team -> modelMapper.map(team, TeamResponseDto.class)).collect(Collectors.toList());
+        List<Team> teams = teamRepo.findAll();
+
+        return teams.stream()
+                .map(team -> {
+
+                    TeamResponseDto teamResponseDto = modelMapper.map(team, TeamResponseDto.class);
+
+                    List<TeamMemberDto> members = team.getUserList()
+                            .stream()
+                            .map(user -> modelMapper.map(user, TeamMemberDto.class))
+                            .collect(Collectors.toList());
+
+                    teamResponseDto.setUsers(members);
+
+                    return teamResponseDto;
+                })
+                .collect(Collectors.toList());
     }
 
     public boolean deleteTeam(Long id) {
-        boolean isPresent = teamRepo.existsById(id);
-        if(isPresent){
-            teamRepo.deleteById(id);
-            return true;
+    Team team = teamRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Team with Id not found"));
+
+        if(!team.getUserList().isEmpty()){
+            throw new InvalidRequestException("Team has members can't be deleted");
         }
         else {
-            throw new ResourceNotFoundException("Team with Id not found:"+id);
+            teamRepo.deleteById(id);
+            return true;
         }
     }
 
     public TeamResponseDto getTeamById(Long id) {
         Team team = teamRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Team with Id not found"));
-        return modelMapper.map(team, TeamResponseDto.class);
+
+        List<TeamMemberDto> userList=team.getUserList()
+                .stream()
+                .map(user -> modelMapper.map(user, TeamMemberDto.class))
+                .toList();
+
+        TeamResponseDto response = modelMapper.map(team, TeamResponseDto.class);
+        response.setUsers(userList);
+        return  response;
     }
 
     public TeamResponseDto patchTeam(Long id, TeamResponseDto teamResponseDto) {
