@@ -1,6 +1,7 @@
 package com.aditya.tutorial.advice;
 
 
+import com.aditya.tutorial.exceptions.InvalidRequestException;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.exceptions.UserAlreadyExistsException;
 import io.jsonwebtoken.JwtException;
@@ -70,5 +71,14 @@ public class GlobalExceptionHandler {
 
         return  new ResponseEntity<>(apiError,HttpStatus.UNAUTHORIZED);
 
+    }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<ApiError> handelInvalidRequestException(InvalidRequestException ex){
+        ApiError apiError=new ApiError();
+        apiError.setMessage(ex.getMessage());
+        apiError.setHttpStatus(HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(apiError,HttpStatus.BAD_REQUEST);
     }
 }

@@ -8,6 +8,7 @@ import com.aditya.tutorial.entity.Enums.Roles;
 import com.aditya.tutorial.entity.Team;
 import com.aditya.tutorial.entity.User;
 import com.aditya.tutorial.exceptions.AdminRoleException;
+import com.aditya.tutorial.exceptions.InvalidRequestException;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.exceptions.UserAlreadyExistsException;
 import com.aditya.tutorial.repo.TeamRepo;
@@ -100,9 +101,14 @@ public class UserService {
     public UserResponseDto addEmpToTeam(AddTeamDto addTeamDto, Long id) {
       User user= userRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("User with Id not found"));
         Team team = teamRepo.findById(addTeamDto.getTeamId()).orElseThrow(()-> new ResourceNotFoundException("Team Not found"));
+        if(user.getRole()!=Roles.ADMIN){
+            user.setTeam(team);
+            User savedUser = userRepo.save(user);
 
-        user.setTeam(team);
-        User savedUser = userRepo.save(user);
-        return modelMapper.map(savedUser,UserResponseDto.class);
+            return modelMapper.map(savedUser,UserResponseDto.class);
+        }else{
+            throw new InvalidRequestException("Admin can't be added to any team");
+        }
+
     }
 }
