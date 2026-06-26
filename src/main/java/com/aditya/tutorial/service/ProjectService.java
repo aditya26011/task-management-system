@@ -14,7 +14,11 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +27,27 @@ public class ProjectService {
     private final ProjectRepo projectRepo;
     private final TeamRepo teamRepo;
     private final ModelMapper modelMapper;
+
+    private TeamSummaryDto mapToTeamSummaryResponseDto(Team team){
+        TeamSummaryDto teamSummaryDto=new TeamSummaryDto();
+        teamSummaryDto.setName(team.getName());
+        teamSummaryDto.setTeamId(team.getId());
+        return teamSummaryDto;
+    }
+
+    private ProjectResponseDto mapToProjectResponseDto(Project project){
+        ProjectResponseDto projectResponseDto=new ProjectResponseDto();
+        projectResponseDto.setStatus(project.getStatus());
+        projectResponseDto.setName(project.getName());
+        projectResponseDto.setId(project.getId());
+        projectResponseDto.setEndDate(project.getEndDate());
+        projectResponseDto.setStartDate(project.getStartDate());
+        projectResponseDto.setCreated_at(project.getCreated_at());
+        projectResponseDto.setDescription(project.getDescription());
+        projectResponseDto.setTeam(mapToTeamSummaryResponseDto(project.getTeam()));
+
+        return projectResponseDto;
+    }
 
     public ProjectResponseDto createProject(ProjectRequestDto projectDto) {
         Long teamId = projectDto.getTeamId();
@@ -50,5 +75,11 @@ public class ProjectService {
 
         projectResponseDto.setTeam(teamSummaryDto);
         return projectResponseDto;
+    }
+
+    public List<ProjectResponseDto> getAllProjects() {
+     List<Project> projectList = projectRepo.findAll();
+    return projectList.stream().map(this::mapToProjectResponseDto).toList();
+
     }
 }
