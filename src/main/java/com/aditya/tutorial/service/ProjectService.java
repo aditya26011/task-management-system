@@ -3,6 +3,7 @@ package com.aditya.tutorial.service;
 
 import com.aditya.tutorial.dto.projectDtos.ProjectRequestDto;
 import com.aditya.tutorial.dto.projectDtos.ProjectResponseDto;
+import com.aditya.tutorial.dto.projectDtos.UpdateProjectDto;
 import com.aditya.tutorial.dto.teamDtos.TeamSummaryDto;
 import com.aditya.tutorial.entity.Enums.Status;
 import com.aditya.tutorial.entity.Project;
@@ -81,5 +82,29 @@ public class ProjectService {
      List<Project> projectList = projectRepo.findAll();
     return projectList.stream().map(this::mapToProjectResponseDto).toList();
 
+    }
+
+    public ProjectResponseDto getProjectById(Long id) {
+        Project project = projectRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Project with Id not found"));
+        return mapToProjectResponseDto(project);
+    }
+
+    public ProjectResponseDto updateProject(Long id, UpdateProjectDto updateProjectDto) {
+        Project project = projectRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Project with Id not found"));
+        if(updateProjectDto.getDescription()!=null){
+            project.setDescription(updateProjectDto.getDescription());
+        }
+        if(updateProjectDto.getName()!=null){
+            project.setName(updateProjectDto.getName());
+        }
+        if(updateProjectDto.getStartDate()!=null){
+            project.setStartDate(updateProjectDto.getStartDate());
+        }
+        if
+        (updateProjectDto.getEndDate()!=null){
+            project.setEndDate(updateProjectDto.getEndDate());
+        }
+        Project updated = projectRepo.save(project);
+        return mapToProjectResponseDto(updated);
     }
 }

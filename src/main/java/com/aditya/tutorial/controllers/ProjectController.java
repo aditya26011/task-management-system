@@ -2,6 +2,7 @@ package com.aditya.tutorial.controllers;
 
 import com.aditya.tutorial.dto.projectDtos.ProjectRequestDto;
 import com.aditya.tutorial.dto.projectDtos.ProjectResponseDto;
+import com.aditya.tutorial.dto.projectDtos.UpdateProjectDto;
 import com.aditya.tutorial.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,5 +29,15 @@ public class ProjectController {
     public ResponseEntity<List<ProjectResponseDto>> getAllProject(){
         List<ProjectResponseDto> list=projectService.getAllProjects();
         return new ResponseEntity<>(list,HttpStatus.OK);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectResponseDto> getProjectById(@PathVariable(value = "id") Long id){
+        ProjectResponseDto projectResponseDto=projectService.getProjectById(id);
+        return new ResponseEntity<>(projectResponseDto,HttpStatus.FOUND);
+    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<ProjectResponseDto> updateProject(@PathVariable(value = "id")Long id, @RequestBody UpdateProjectDto updateProjectDto){
+        ProjectResponseDto projectResponseDto=projectService.updateProject(id,updateProjectDto);
+        return new ResponseEntity<>(projectResponseDto,HttpStatus.OK);
     }
 }
