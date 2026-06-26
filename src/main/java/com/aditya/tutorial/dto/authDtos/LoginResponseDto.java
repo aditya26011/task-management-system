@@ -1,4 +1,4 @@
-package com.aditya.tutorial.dto;
+package com.aditya.tutorial.dto.authDtos;
 
 
 import lombok.AllArgsConstructor;

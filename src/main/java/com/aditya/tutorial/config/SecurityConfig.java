@@ -45,7 +45,8 @@ public class SecurityConfig{
                         .hasRole(MANAGER.name())
                         .requestMatchers(HttpMethod.PATCH,"/user/**")
                         .hasRole(MANAGER.name())
-
+                        .requestMatchers(HttpMethod.POST,"/project/**")
+                        .hasRole(MANAGER.name())
                         //All authenticated user
                         .requestMatchers(HttpMethod.GET,"/user/**")
                         .hasAnyRole(ADMIN.name(), MANAGER.name(), EMPLOYEE.name())

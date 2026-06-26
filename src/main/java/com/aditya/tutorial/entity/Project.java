@@ -1,5 +1,6 @@
 package com.aditya.tutorial.entity;
 
+import com.aditya.tutorial.entity.Enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,22 +12,24 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class Team {
+public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;
-
     private String description;
 
     @CreationTimestamp
     private Timestamp created_at;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
-    @OneToMany(mappedBy = "team")
-    private List<User> userList;
+    private Timestamp startDate;
+    private Timestamp endDate;
 
-    @OneToMany(mappedBy = "team")
-    private List<Project> projectList ;
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
 }

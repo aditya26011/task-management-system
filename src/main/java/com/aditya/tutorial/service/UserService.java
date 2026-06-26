@@ -1,26 +1,22 @@
 package com.aditya.tutorial.service;
 
-import com.aditya.tutorial.dto.AddTeamDto;
-import com.aditya.tutorial.dto.UserDto;
-import com.aditya.tutorial.dto.UserResponseDto;
-import com.aditya.tutorial.dto.UserRoleRequestDto;
+import com.aditya.tutorial.dto.teamDtos.AddTeamDto;
+import com.aditya.tutorial.dto.userDtos.UserDto;
+import com.aditya.tutorial.dto.userDtos.UserResponseDto;
+import com.aditya.tutorial.dto.userDtos.UserRoleRequestDto;
 import com.aditya.tutorial.entity.Enums.Roles;
 import com.aditya.tutorial.entity.Team;
 import com.aditya.tutorial.entity.User;
 import com.aditya.tutorial.exceptions.AdminRoleException;
 import com.aditya.tutorial.exceptions.InvalidRequestException;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
-import com.aditya.tutorial.exceptions.UserAlreadyExistsException;
 import com.aditya.tutorial.repo.TeamRepo;
 import com.aditya.tutorial.repo.UserRepo;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

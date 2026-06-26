@@ -1,6 +1,6 @@
 package com.aditya.tutorial.controllers;
 
-import com.aditya.tutorial.dto.TeamResponseDto;
+import com.aditya.tutorial.dto.teamDtos.TeamResponseDto;
 import com.aditya.tutorial.service.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

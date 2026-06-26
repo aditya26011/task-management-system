@@ -1,19 +1,17 @@
 package com.aditya.tutorial.controllers;
 
-import com.aditya.tutorial.dto.LoginDto;
-import com.aditya.tutorial.dto.LoginResponseDto;
-import com.aditya.tutorial.dto.SignUpDto;
-import com.aditya.tutorial.dto.SignUpResponseDto;
+import com.aditya.tutorial.dto.authDtos.LoginDto;
+import com.aditya.tutorial.dto.authDtos.LoginResponseDto;
+import com.aditya.tutorial.dto.authDtos.SignUpDto;
+import com.aditya.tutorial.dto.authDtos.SignUpResponseDto;
 import com.aditya.tutorial.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

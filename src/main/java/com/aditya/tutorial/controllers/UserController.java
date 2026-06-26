@@ -1,11 +1,10 @@
 package com.aditya.tutorial.controllers;
 
-import com.aditya.tutorial.dto.AddTeamDto;
-import com.aditya.tutorial.dto.UserDto;
-import com.aditya.tutorial.dto.UserResponseDto;
-import com.aditya.tutorial.dto.UserRoleRequestDto;
+import com.aditya.tutorial.dto.teamDtos.AddTeamDto;
+import com.aditya.tutorial.dto.userDtos.UserDto;
+import com.aditya.tutorial.dto.userDtos.UserResponseDto;
+import com.aditya.tutorial.dto.userDtos.UserRoleRequestDto;
 import com.aditya.tutorial.service.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

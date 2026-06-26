@@ -1,12 +1,10 @@
-package com.aditya.tutorial.dto;
+package com.aditya.tutorial.dto.teamDtos;
 
 
-import com.aditya.tutorial.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.util.List;

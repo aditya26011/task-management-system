@@ -1,10 +1,11 @@
 package com.aditya.tutorial.service;
 
 
-import com.aditya.tutorial.dto.*;
-import com.aditya.tutorial.entity.Enums.Roles;
+import com.aditya.tutorial.dto.authDtos.LoginDto;
+import com.aditya.tutorial.dto.authDtos.LoginResponseDto;
+import com.aditya.tutorial.dto.authDtos.SignUpDto;
+import com.aditya.tutorial.dto.authDtos.SignUpResponseDto;
 import com.aditya.tutorial.entity.User;
-import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.exceptions.UserAlreadyExistsException;
 import com.aditya.tutorial.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

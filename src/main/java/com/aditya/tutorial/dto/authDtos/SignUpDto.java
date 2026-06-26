@@ -1,19 +1,16 @@
-package com.aditya.tutorial.dto;
+package com.aditya.tutorial.dto.authDtos;
 
-import com.aditya.tutorial.entity.Enums.Roles;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
-public class UserDto {
-    private Long id;
+@Getter
+@Setter
+public class SignUpDto {
 
     @NotEmpty(message = "Name is required")
     @Size(min = 3, max=10, message = "Name should have min 3 chars and max 10")
@@ -27,9 +24,4 @@ public class UserDto {
     @Size(min = 7,max = 12,message = "Password should have min 7 chars and max 12")
     private String password;
 
-    @Enumerated(value = EnumType.STRING)
-    private Roles role;
-
-    @CreationTimestamp
-    private LocalDateTime created_at;
 }

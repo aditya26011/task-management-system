@@ -1,10 +1,8 @@
 package com.aditya.tutorial.service;
 
-import com.aditya.tutorial.dto.TeamMemberDto;
-import com.aditya.tutorial.dto.TeamResponseDto;
-import com.aditya.tutorial.dto.UserDto;
+import com.aditya.tutorial.dto.teamDtos.TeamMemberDto;
+import com.aditya.tutorial.dto.teamDtos.TeamResponseDto;
 import com.aditya.tutorial.entity.Team;
-import com.aditya.tutorial.entity.User;
 import com.aditya.tutorial.exceptions.InvalidRequestException;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.repo.TeamRepo;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service

@@ -1,4 +1,4 @@
-package com.aditya.tutorial.dto;
+package com.aditya.tutorial.dto.userDtos;
 
 import com.aditya.tutorial.entity.Enums.Roles;
 import lombok.Data;

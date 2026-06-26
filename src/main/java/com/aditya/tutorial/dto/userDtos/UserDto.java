@@ -1,7 +1,6 @@
-package com.aditya.tutorial.dto;
+package com.aditya.tutorial.dto.userDtos;
 
 import com.aditya.tutorial.entity.Enums.Roles;
-import com.aditya.tutorial.entity.Team;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
@@ -13,16 +12,24 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Data
-public class UserResponseDto {
+public class UserDto {
     private Long id;
 
+    @NotEmpty(message = "Name is required")
+    @Size(min = 3, max=10, message = "Name should have min 3 chars and max 10")
     private String name;
 
-
+    @Email
+    @NotEmpty(message = "email is required")
     private String email;
 
-    private Roles role;
-    private Long teamId;
+    @NotEmpty(message = "Password is required")
+    @Size(min = 7,max = 12,message = "Password should have min 7 chars and max 12")
+    private String password;
 
+    @Enumerated(value = EnumType.STRING)
+    private Roles role;
+
+    @CreationTimestamp
     private LocalDateTime created_at;
 }
