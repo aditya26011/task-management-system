@@ -1,7 +1,10 @@
 package com.aditya.tutorial.service;
 
+import com.aditya.tutorial.dto.projectDtos.ProjectSummaryDto;
+import com.aditya.tutorial.dto.taskDtos.TaskGetResponseDto;
 import com.aditya.tutorial.dto.taskDtos.TaskRequestDto;
 import com.aditya.tutorial.dto.taskDtos.TaskResponseDto;
+import com.aditya.tutorial.dto.userDtos.UserSummaryDto;
 import com.aditya.tutorial.entity.Enums.Roles;
 import com.aditya.tutorial.entity.Enums.TaskStatus;
 import com.aditya.tutorial.entity.Project;
@@ -16,6 +19,8 @@ import com.aditya.tutorial.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -67,5 +72,39 @@ public class TaskService {
         taskResponseDto.setId(savedTask.getId());
         taskResponseDto.setCreated_at(savedTask.getCreated_at());
         return taskResponseDto;
+    }
+
+    private TaskGetResponseDto mapTaskGetResponseDto(Task task){
+        TaskGetResponseDto taskGetResponseDto=new TaskGetResponseDto();
+        taskGetResponseDto.setTitle(task.getTitle());
+        taskGetResponseDto.setDescription(task.getDescription());
+        taskGetResponseDto.setPriority(task.getPriority());
+        taskGetResponseDto.setStatus(task.getStatus());
+        taskGetResponseDto.setCreated_at(task.getCreated_at());
+        taskGetResponseDto.setDueDate(task.getDueDate());
+        taskGetResponseDto.setProject(mapSummaryProjectDto(task.getProject()));
+        taskGetResponseDto.setUser(mapSummaryUserDto(task.getAssignedUser()));
+        return taskGetResponseDto;
+    }
+    private ProjectSummaryDto mapSummaryProjectDto(Project project){
+        ProjectSummaryDto projectSummaryDto=new ProjectSummaryDto();
+        projectSummaryDto.setName(project.getName());
+        projectSummaryDto.setProjectId(projectSummaryDto.getProjectId());
+        return projectSummaryDto;
+    }
+
+    private UserSummaryDto mapSummaryUserDto(User user){
+        UserSummaryDto userSummaryDto=new UserSummaryDto();
+        userSummaryDto.setId(user.getId());
+        userSummaryDto.setName(user.getName());
+        return userSummaryDto;
+    }
+    public List<TaskGetResponseDto> getAllTask() {
+        List<Task> taskList=taskRepo.findAll();
+
+     return  taskList.stream()
+                .map(this::mapTaskGetResponseDto)
+                .toList();
+
     }
 }
