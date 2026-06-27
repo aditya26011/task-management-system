@@ -1,9 +1,6 @@
 package com.aditya.tutorial.controllers;
 
-import com.aditya.tutorial.dto.taskDtos.TaskGetResponseDto;
-import com.aditya.tutorial.dto.taskDtos.TaskRequestDto;
-import com.aditya.tutorial.dto.taskDtos.TaskResponseDto;
-import com.aditya.tutorial.dto.taskDtos.TaskUpdateDto;
+import com.aditya.tutorial.dto.taskDtos.*;
 import com.aditya.tutorial.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -43,5 +40,10 @@ public class TaskController {
 
         TaskGetResponseDto updatedTask=taskService.updateTask(id,taskUpdateDto);
         return new ResponseEntity<>(updatedTask,HttpStatus.OK);
+    }
+    @PatchMapping("/status/{id}")
+    public ResponseEntity<TaskGetResponseDto> updateStatus(@PathVariable(value = "id") Long id, @RequestBody UpdateStatusDto updateStatusDto){
+        TaskGetResponseDto taskGetResponseDto=taskService.updateStatus(id,updateStatusDto);
+        return new ResponseEntity<>(taskGetResponseDto,HttpStatus.OK);
     }
 }

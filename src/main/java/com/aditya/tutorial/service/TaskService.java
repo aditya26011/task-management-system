@@ -1,10 +1,7 @@
 package com.aditya.tutorial.service;
 
 import com.aditya.tutorial.dto.projectDtos.ProjectSummaryDto;
-import com.aditya.tutorial.dto.taskDtos.TaskGetResponseDto;
-import com.aditya.tutorial.dto.taskDtos.TaskRequestDto;
-import com.aditya.tutorial.dto.taskDtos.TaskResponseDto;
-import com.aditya.tutorial.dto.taskDtos.TaskUpdateDto;
+import com.aditya.tutorial.dto.taskDtos.*;
 import com.aditya.tutorial.dto.userDtos.UserSummaryDto;
 import com.aditya.tutorial.entity.Enums.Roles;
 import com.aditya.tutorial.entity.Enums.TaskStatus;
@@ -134,5 +131,12 @@ public class TaskService {
 
         return mapTaskGetResponseDto(savedTask);
 
+    }
+
+    public TaskGetResponseDto updateStatus(Long id, UpdateStatusDto updateStatusDto) {
+      Task task=taskRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Task with this id not found"));
+      task.setStatus(updateStatusDto.getUpdateStatus());
+      Task savedTask=taskRepo.save(task);
+      return mapTaskGetResponseDto(savedTask);
     }
 }
