@@ -108,4 +108,10 @@ public class TaskService {
                 .toList();
 
     }
+
+    public TaskGetResponseDto getTaskById(Long id) {
+        Task task = taskRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task with Given Id not found"));
+        return mapTaskGetResponseDto(task);
+
+    }
 }

@@ -31,4 +31,9 @@ public class TaskController {
         List<TaskGetResponseDto> taskGetResponseDtos=taskService.getAllTask();
         return new ResponseEntity<>(taskGetResponseDtos,HttpStatus.FOUND);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskGetResponseDto> getTaskById(@PathVariable(value = "id")Long id){
+        TaskGetResponseDto responseDto=taskService.getTaskById(id);
+        return new ResponseEntity<>(responseDto,HttpStatus.FOUND);
+    }
 }
