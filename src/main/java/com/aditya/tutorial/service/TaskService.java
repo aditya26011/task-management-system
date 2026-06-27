@@ -2,16 +2,19 @@ package com.aditya.tutorial.service;
 
 import com.aditya.tutorial.dto.taskDtos.TaskRequestDto;
 import com.aditya.tutorial.dto.taskDtos.TaskResponseDto;
+import com.aditya.tutorial.entity.Enums.Roles;
 import com.aditya.tutorial.entity.Enums.TaskStatus;
 import com.aditya.tutorial.entity.Project;
 import com.aditya.tutorial.entity.Task;
 import com.aditya.tutorial.entity.User;
+import com.aditya.tutorial.exceptions.InvalidRequestException;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.repo.ProjectRepo;
 import com.aditya.tutorial.repo.TaskRepo;
 import com.aditya.tutorial.repo.TeamRepo;
 import com.aditya.tutorial.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,11 +25,17 @@ public class TaskService {
     private final UserRepo userRepo;
     private final ProjectRepo projectRepo;
 
-    public TaskResponseDto create(TaskRequestDto taskRequestDto) {
+    public TaskResponseDto create(TaskRequestDto taskRequestDto)  {
 
        User user= userRepo.findById(taskRequestDto.getUserId()).orElseThrow(()->new ResourceNotFoundException("User with this Id is not available"));
        Project project= projectRepo.findById(taskRequestDto.getProjectId()).orElseThrow(()->new ResourceNotFoundException("Project with this Id is not possible"));
 
+    if(user.getRole()== Roles.ADMIN){
+        throw  new InvalidRequestException("Task can't be assigned to Admin");
+    }
+    if(!user.getTeam().getId().equals(project.getId())){
+        throw new InvalidRequestException("User should belong to same team");
+    }
         Task task=new Task();
         task.setDescription(taskRequestDto.getDescription());
         task.setTitle(taskRequestDto.getTitle());
