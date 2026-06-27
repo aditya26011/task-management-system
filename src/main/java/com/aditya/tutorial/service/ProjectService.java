@@ -107,4 +107,16 @@ public class ProjectService {
         Project updated = projectRepo.save(project);
         return mapToProjectResponseDto(updated);
     }
+
+    public boolean deleteById(Long id) {
+
+        //Once task comes if project has task then we should not delete it throw excep
+        boolean exists = projectRepo.existsById(id);
+        if(exists){
+            projectRepo.deleteById(id);
+            return true;
+        }else{
+            throw new ResourceNotFoundException("Project with Id not found");
+        }
+    }
 }

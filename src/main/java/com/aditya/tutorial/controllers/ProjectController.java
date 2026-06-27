@@ -40,4 +40,13 @@ public class ProjectController {
         ProjectResponseDto projectResponseDto=projectService.updateProject(id,updateProjectDto);
         return new ResponseEntity<>(projectResponseDto,HttpStatus.OK);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable(value = "id") Long id){
+        boolean isDeleted=projectService.deleteById(id);
+        if(isDeleted){
+            return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("Not able to delete",HttpStatus.BAD_REQUEST);
+        }
+    }
 }
