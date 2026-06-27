@@ -82,6 +82,7 @@ public class TaskService {
         taskGetResponseDto.setStatus(task.getStatus());
         taskGetResponseDto.setCreated_at(task.getCreated_at());
         taskGetResponseDto.setDueDate(task.getDueDate());
+        taskGetResponseDto.setId(task.getId());
         taskGetResponseDto.setProject(mapSummaryProjectDto(task.getProject()));
         taskGetResponseDto.setUser(mapSummaryUserDto(task.getAssignedUser()));
         return taskGetResponseDto;
