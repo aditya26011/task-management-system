@@ -42,6 +42,9 @@ public class User implements UserDetails {
     @JoinColumn(name = "team_id")
     private Team team; //fk team cannot exist without user
 
+    @OneToMany(mappedBy = "assignedUser")
+    private List<Task> taskList;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
          return Collections.singleton(new SimpleGrantedAuthority("ROLE_"+role.name()));

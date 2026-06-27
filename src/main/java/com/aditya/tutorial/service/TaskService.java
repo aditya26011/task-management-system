@@ -1,0 +1,62 @@
+package com.aditya.tutorial.service;
+
+import com.aditya.tutorial.dto.taskDtos.TaskRequestDto;
+import com.aditya.tutorial.dto.taskDtos.TaskResponseDto;
+import com.aditya.tutorial.entity.Enums.TaskStatus;
+import com.aditya.tutorial.entity.Project;
+import com.aditya.tutorial.entity.Task;
+import com.aditya.tutorial.entity.User;
+import com.aditya.tutorial.exceptions.ResourceNotFoundException;
+import com.aditya.tutorial.repo.ProjectRepo;
+import com.aditya.tutorial.repo.TaskRepo;
+import com.aditya.tutorial.repo.TeamRepo;
+import com.aditya.tutorial.repo.UserRepo;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class TaskService {
+
+    private final TaskRepo taskRepo;
+    private final UserRepo userRepo;
+    private final ProjectRepo projectRepo;
+
+    public TaskResponseDto create(TaskRequestDto taskRequestDto) {
+
+       User user= userRepo.findById(taskRequestDto.getUserId()).orElseThrow(()->new ResourceNotFoundException("User with this Id is not available"));
+       Project project= projectRepo.findById(taskRequestDto.getProjectId()).orElseThrow(()->new ResourceNotFoundException("Project with this Id is not possible"));
+
+        Task task=new Task();
+        task.setDescription(taskRequestDto.getDescription());
+        task.setTitle(taskRequestDto.getTitle());
+        task.setPriority(taskRequestDto.getPriority());
+        task.setStatus(TaskStatus.TODO);
+        task.setDueDate(taskRequestDto.getDueDate());
+        task.setProject(project);
+        task.setAssignedUser(user);
+
+        Task savedTask=taskRepo.save(task);
+        System.out.println("Saved ID = " + savedTask.getId());
+        Task check = taskRepo.findById(savedTask.getId()).orElse(null);
+        System.out.println(check);
+
+        TaskResponseDto taskResponseDto = getTaskResponseDto(savedTask);
+
+        return taskResponseDto;
+    }
+
+    private static TaskResponseDto getTaskResponseDto(Task savedTask) {
+        TaskResponseDto taskResponseDto=new TaskResponseDto();
+        taskResponseDto.setTitle(savedTask.getTitle());
+        taskResponseDto.setDescription(savedTask.getDescription());
+        taskResponseDto.setPriority(savedTask.getPriority());
+        taskResponseDto.setStatus(savedTask.getStatus());
+        taskResponseDto.setProjectId(savedTask.getProject().getId());
+        taskResponseDto.setDueDate(savedTask.getDueDate());
+        taskResponseDto.setUserId(savedTask.getAssignedUser().getId());
+        taskResponseDto.setId(savedTask.getId());
+        taskResponseDto.setCreated_at(savedTask.getCreated_at());
+        return taskResponseDto;
+    }
+}

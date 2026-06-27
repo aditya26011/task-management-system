@@ -32,4 +32,7 @@ public class Project {
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
+
+    @OneToMany(mappedBy = "project")
+    private List<Task> tasksList;
 }
