@@ -4,6 +4,7 @@ import com.aditya.tutorial.dto.projectDtos.ProjectSummaryDto;
 import com.aditya.tutorial.dto.taskDtos.TaskGetResponseDto;
 import com.aditya.tutorial.dto.taskDtos.TaskRequestDto;
 import com.aditya.tutorial.dto.taskDtos.TaskResponseDto;
+import com.aditya.tutorial.dto.taskDtos.TaskUpdateDto;
 import com.aditya.tutorial.dto.userDtos.UserSummaryDto;
 import com.aditya.tutorial.entity.Enums.Roles;
 import com.aditya.tutorial.entity.Enums.TaskStatus;
@@ -112,6 +113,26 @@ public class TaskService {
     public TaskGetResponseDto getTaskById(Long id) {
         Task task = taskRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task with Given Id not found"));
         return mapTaskGetResponseDto(task);
+
+    }
+
+    public TaskGetResponseDto updateTask(Long id, TaskUpdateDto taskUpdateDto) {
+        Task task = taskRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task with Given Id not found"));
+        if(taskUpdateDto.getDescription()!=null){
+            task.setDescription(taskUpdateDto.getDescription());
+        }
+        if(taskUpdateDto.getPriority()!=null){
+            task.setPriority(taskUpdateDto.getPriority());
+        }
+        if(taskUpdateDto.getTitle()!=null){
+            task.setTitle(taskUpdateDto.getTitle());
+        }
+        if(taskUpdateDto.getDueDate()!=null){
+            task.setDueDate(taskUpdateDto.getDueDate());
+        }
+      Task savedTask=taskRepo.save(task);
+
+        return mapTaskGetResponseDto(savedTask);
 
     }
 }
