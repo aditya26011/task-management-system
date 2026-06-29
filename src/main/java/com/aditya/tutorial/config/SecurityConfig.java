@@ -50,7 +50,7 @@ public class SecurityConfig{
                         .requestMatchers(HttpMethod.POST,"/task/**")
                         .hasRole(MANAGER.name())
                         .requestMatchers(HttpMethod.GET,"/task/**")
-                        .hasRole(MANAGER.name())
+                        .hasAnyRole(MANAGER.name(), EMPLOYEE.name())
                         .requestMatchers(HttpMethod.PATCH,"/task/**")
                         .hasRole(MANAGER.name())
                         .requestMatchers(HttpMethod.DELETE,"/task/**")

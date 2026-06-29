@@ -61,4 +61,10 @@ public class TaskController {
         }
     }
 
+    @GetMapping("/my-tasks")
+    public ResponseEntity<List<UserTaskDto>> getMyTasks(){
+        List<UserTaskDto> userTaskDtoList=taskService.getMyTasks();
+        return new ResponseEntity<>(userTaskDtoList,HttpStatus.FOUND);
+    }
+
 }

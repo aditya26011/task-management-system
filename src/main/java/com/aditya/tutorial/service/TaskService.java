@@ -17,6 +17,8 @@ import com.aditya.tutorial.repo.TeamRepo;
 import com.aditya.tutorial.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -162,5 +164,25 @@ public class TaskService {
             }else{
                 throw new ResourceNotFoundException("Task with this id does not exists");
             }
+    }
+
+    public List<UserTaskDto> getMyTasks() {
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+
+        User loggedInUser= (User) authentication.getPrincipal();
+       List<Task> taskList= taskRepo.findByAssignedUser(loggedInUser);
+      return taskList.stream().map(this::mapUserTasks).toList();
+
+    }
+    private UserTaskDto mapUserTasks(Task task){
+        UserTaskDto userTaskDto=new UserTaskDto();
+        userTaskDto.setDescription(task.getDescription());
+        userTaskDto.setId(task.getId());
+        userTaskDto.setPriority(task.getPriority());
+        userTaskDto.setStatus(task.getStatus());
+        userTaskDto.setTitle(task.getTitle());
+        userTaskDto.setCreated_at(task.getCreated_at());
+        userTaskDto.setDueDate(task.getDueDate());
+        return userTaskDto;
     }
 }
