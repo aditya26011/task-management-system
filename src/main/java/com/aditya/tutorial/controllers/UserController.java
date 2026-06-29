@@ -28,20 +28,20 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<List<UserResponseDto>> getAll(){
         List<UserResponseDto> userResponseDto=userService.getAll();
-        return new ResponseEntity<>(userResponseDto,HttpStatus.FOUND);
+        return new ResponseEntity<>(userResponseDto,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getEmpById(@PathVariable(value = "id") Long id){
         UserResponseDto user=userService.getEmpById(id);
-        return new ResponseEntity<>(user,HttpStatus.FOUND);
+        return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable(value = "id") Long id){
       int deleted= userService.deleteById(id);
       if(deleted==1)
-          return new ResponseEntity<>("deleted Successfully",HttpStatus.OK);
+          return new ResponseEntity<>("deleted Successfully",HttpStatus.NO_CONTENT  );
       else
           return new ResponseEntity<>("failed to delete",HttpStatus.BAD_REQUEST);
     }

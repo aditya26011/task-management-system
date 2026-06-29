@@ -39,7 +39,7 @@ public class TeamController {
     public ResponseEntity<String> deleteTeam(@PathVariable(value = "id") Long id){
         boolean isDeleted =teamService.deleteTeam(id);
         if(isDeleted){
-            return new ResponseEntity<>("Deleted Successfully", HttpStatus.OK);
+            return new ResponseEntity<>("Deleted Successfully", HttpStatus.NO_CONTENT);
         }else{
             return new ResponseEntity<>("Failed to Delete",HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -33,7 +33,7 @@ public class ProjectController {
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponseDto> getProjectById(@PathVariable(value = "id") Long id){
         ProjectResponseDto projectResponseDto=projectService.getProjectById(id);
-        return new ResponseEntity<>(projectResponseDto,HttpStatus.FOUND);
+        return new ResponseEntity<>(projectResponseDto,HttpStatus.OK);
     }
     @PatchMapping("/{id}")
     public ResponseEntity<ProjectResponseDto> updateProject(@PathVariable(value = "id")Long id, @RequestBody UpdateProjectDto updateProjectDto){
@@ -44,7 +44,7 @@ public class ProjectController {
     public ResponseEntity<String> deleteById(@PathVariable(value = "id") Long id){
         boolean isDeleted=projectService.deleteById(id);
         if(isDeleted){
-            return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
+            return new ResponseEntity<>("Deleted Successfully",HttpStatus.NO_CONTENT);
         }else{
             return new ResponseEntity<>("Not able to delete",HttpStatus.BAD_REQUEST);
         }

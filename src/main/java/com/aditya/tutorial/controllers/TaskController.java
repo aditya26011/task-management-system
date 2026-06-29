@@ -27,12 +27,12 @@ public class TaskController {
     @GetMapping("/all")
       public ResponseEntity<List<TaskGetResponseDto>> getAll(){
         List<TaskGetResponseDto> taskGetResponseDtos=taskService.getAllTask();
-        return new ResponseEntity<>(taskGetResponseDtos,HttpStatus.FOUND);
+        return new ResponseEntity<>(taskGetResponseDtos,HttpStatus.OK);
     }
     @GetMapping("/{id}")
     public ResponseEntity<TaskGetResponseDto> getTaskById(@PathVariable(value = "id")Long id){
         TaskGetResponseDto responseDto=taskService.getTaskById(id);
-        return new ResponseEntity<>(responseDto,HttpStatus.FOUND);
+        return new ResponseEntity<>(responseDto,HttpStatus.OK);
     }
     @PatchMapping("/{id}")
     public ResponseEntity<TaskGetResponseDto> updateTask(@PathVariable(value = "id")Long id,
@@ -49,13 +49,13 @@ public class TaskController {
     @PatchMapping("/{id}/assign")
     public ResponseEntity<TaskGetResponseDto> assignTask(@PathVariable(value = "id")Long id, @RequestBody AssignTaskDto assignTaskDto){
         TaskGetResponseDto taskGetResponseDto=taskService.assignTask(id,assignTaskDto);
-        return new ResponseEntity<>(taskGetResponseDto,HttpStatus.FOUND);
+        return new ResponseEntity<>(taskGetResponseDto,HttpStatus.OK);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTask(@PathVariable(value = "id")Long id){
         boolean isDeleted=taskService.deleteTask(id);
         if(isDeleted){
-            return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
+            return new ResponseEntity<>("Deleted Successfully",HttpStatus.NO_CONTENT);
         }else{
             return new ResponseEntity<>("Failed to Delete",HttpStatus.BAD_REQUEST);
         }
@@ -64,7 +64,7 @@ public class TaskController {
     @GetMapping("/my-tasks")
     public ResponseEntity<List<UserTaskDto>> getMyTasks(){
         List<UserTaskDto> userTaskDtoList=taskService.getMyTasks();
-        return new ResponseEntity<>(userTaskDtoList,HttpStatus.FOUND);
+        return new ResponseEntity<>(userTaskDtoList,HttpStatus.OK);
     }
 
 }
