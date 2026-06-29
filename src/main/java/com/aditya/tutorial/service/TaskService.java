@@ -7,6 +7,7 @@ import com.aditya.tutorial.entity.Enums.Roles;
 import com.aditya.tutorial.entity.Enums.TaskStatus;
 import com.aditya.tutorial.entity.Project;
 import com.aditya.tutorial.entity.Task;
+import com.aditya.tutorial.entity.Team;
 import com.aditya.tutorial.entity.User;
 import com.aditya.tutorial.exceptions.InvalidRequestException;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
@@ -138,5 +139,18 @@ public class TaskService {
       task.setStatus(updateStatusDto.getUpdateStatus());
       Task savedTask=taskRepo.save(task);
       return mapTaskGetResponseDto(savedTask);
+    }
+
+    public TaskGetResponseDto assignTask(Long id, AssignTaskDto assignTaskDto) {
+        Task task=taskRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Task with this id not found"));
+        User user=userRepo.findById(assignTaskDto.getEmployeeId()).orElseThrow(()-> new ResourceNotFoundException("User with Id not found"));
+        Team projectTeam=task.getProject().getTeam();
+
+        if(user.getTeam()==null||!user.getTeam().getId().equals(projectTeam.getId())){
+            throw new InvalidRequestException("User should belong to same team");        }
+
+        task.setAssignedUser(user);
+        Task savedTask = taskRepo.save(task);
+        return mapTaskGetResponseDto(savedTask);
     }
 }

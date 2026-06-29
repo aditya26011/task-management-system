@@ -46,4 +46,9 @@ public class TaskController {
         TaskGetResponseDto taskGetResponseDto=taskService.updateStatus(id,updateStatusDto);
         return new ResponseEntity<>(taskGetResponseDto,HttpStatus.OK);
     }
+    @PatchMapping("/{id}/assign")
+    public ResponseEntity<TaskGetResponseDto> assignTask(@PathVariable(value = "id")Long id, @RequestBody AssignTaskDto assignTaskDto){
+        TaskGetResponseDto taskGetResponseDto=taskService.assignTask(id,assignTaskDto);
+        return new ResponseEntity<>(taskGetResponseDto,HttpStatus.FOUND);
+    }
 }
