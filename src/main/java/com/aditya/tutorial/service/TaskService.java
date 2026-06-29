@@ -153,4 +153,14 @@ public class TaskService {
         Task savedTask = taskRepo.save(task);
         return mapTaskGetResponseDto(savedTask);
     }
+
+    public boolean deleteTask(Long id) {
+        boolean existsById = taskRepo.existsById(id);
+            if(existsById){
+                taskRepo.deleteById(id);
+                return true;
+            }else{
+                throw new ResourceNotFoundException("Task with this id does not exists");
+            }
+    }
 }

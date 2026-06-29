@@ -51,4 +51,14 @@ public class TaskController {
         TaskGetResponseDto taskGetResponseDto=taskService.assignTask(id,assignTaskDto);
         return new ResponseEntity<>(taskGetResponseDto,HttpStatus.FOUND);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTask(@PathVariable(value = "id")Long id){
+        boolean isDeleted=taskService.deleteTask(id);
+        if(isDeleted){
+            return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("Failed to Delete",HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
