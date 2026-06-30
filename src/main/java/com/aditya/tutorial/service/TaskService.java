@@ -1,5 +1,6 @@
 package com.aditya.tutorial.service;
 
+import com.aditya.tutorial.dto.pagination.PageResponse;
 import com.aditya.tutorial.dto.projectDtos.ProjectSummaryDto;
 import com.aditya.tutorial.dto.taskDtos.*;
 import com.aditya.tutorial.dto.userDtos.UserSummaryDto;
@@ -16,7 +17,8 @@ import com.aditya.tutorial.repo.TaskRepo;
 import com.aditya.tutorial.repo.TeamRepo;
 import com.aditya.tutorial.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -39,7 +41,7 @@ public class TaskService {
     if(user.getRole()== Roles.ADMIN){
         throw  new InvalidRequestException("Task can't be assigned to Admin");
     }
-    if(!user.getTeam().getId().equals(project.getId())){
+    if(!user.getTeam().getId().equals(project.getTeam().getId())){
         throw new InvalidRequestException("User should belong to same team");
     }
         Task task=new Task();
@@ -101,13 +103,23 @@ public class TaskService {
         userSummaryDto.setName(user.getName());
         return userSummaryDto;
     }
-    public List<TaskGetResponseDto> getAllTask() {
-        List<Task> taskList=taskRepo.findAll();
+    public PageResponse<TaskGetResponseDto> getAllTask(Pageable pageable) {
 
-     return  taskList.stream()
+        Page<Task> page = taskRepo.findAll(pageable);
+
+        List<TaskGetResponseDto> tasks = page.getContent()
+                .stream()
                 .map(this::mapTaskGetResponseDto)
                 .toList();
 
+        PageResponse<TaskGetResponseDto> response = new PageResponse<>();
+        response.setContent(tasks);
+        response.setPageNo(page.getNumber());
+        response.setPageSize(page.getSize());
+        response.setTotalElements(page.getTotalElements());
+        response.setTotalPages(page.getTotalPages());
+        response.setLast(page.isLast());
+            return response;
     }
 
     public TaskGetResponseDto getTaskById(Long id) {

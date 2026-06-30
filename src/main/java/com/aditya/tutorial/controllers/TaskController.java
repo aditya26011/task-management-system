@@ -1,14 +1,19 @@
 package com.aditya.tutorial.controllers;
 
+import com.aditya.tutorial.dto.pagination.PageResponse;
 import com.aditya.tutorial.dto.taskDtos.*;
 import com.aditya.tutorial.service.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/task")
@@ -25,9 +30,17 @@ public class TaskController {
     }
 
     @GetMapping("/all")
-      public ResponseEntity<List<TaskGetResponseDto>> getAll(){
-        List<TaskGetResponseDto> taskGetResponseDtos=taskService.getAllTask();
-        return new ResponseEntity<>(taskGetResponseDtos,HttpStatus.OK);
+      public ResponseEntity<PageResponse<TaskGetResponseDto>> getAll(@RequestParam(defaultValue = "id") String sortBy,
+                                                                     @RequestParam(defaultValue = "0") int pageNo,
+                                                                     @RequestParam(defaultValue = "5") int pageSize,
+                                                                     @RequestParam(defaultValue = "asc")String sortDir){
+
+        Sort sort=sortDir.equalsIgnoreCase("desc")
+                ?Sort.by(sortBy).descending()
+                :Sort.by(sortBy).ascending();
+
+        Pageable pageable=PageRequest.of(pageNo,pageSize,sort);
+        return ResponseEntity.ok(taskService.getAllTask(pageable));
     }
     @GetMapping("/{id}")
     public ResponseEntity<TaskGetResponseDto> getTaskById(@PathVariable(value = "id")Long id){
