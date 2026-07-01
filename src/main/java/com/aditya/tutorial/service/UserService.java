@@ -13,11 +13,13 @@ import com.aditya.tutorial.exceptions.InvalidRequestException;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.repo.TeamRepo;
 import com.aditya.tutorial.repo.UserRepo;
+import com.aditya.tutorial.specifications.UserSpecification;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,11 +52,21 @@ public class UserService {
 //
 //    }
 
-    public PageResponse<UserResponseDto> getAll(Pageable pageable) {
+    public PageResponse<UserResponseDto> getAll(Roles roles,Long teamId,Pageable pageable) {
 
-
-
-     Page<User> page=userRepo.findAll(pageable);
+        Specification<User> specification=Specification.unrestricted();
+        if(roles!=null){
+            specification=specification.and(UserSpecification.hasRole(roles));
+        }
+        if(teamId!=null){
+            specification=specification.and((UserSpecification.hasTeamId(teamId)));
+        }
+        Page<User> page;
+        if(specification!=null){
+            page=userRepo.findAll(specification,pageable);
+        }else{
+            page=userRepo.findAll(pageable);
+        }
 
      List<UserResponseDto> userList= page.getContent().stream().map((element) -> modelMapper.map(element, UserResponseDto.class)).toList();
         PageResponse<UserResponseDto> pageResponse=new PageResponse<>();

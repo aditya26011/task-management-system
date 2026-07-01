@@ -5,6 +5,8 @@ import com.aditya.tutorial.dto.teamDtos.AddTeamDto;
 import com.aditya.tutorial.dto.userDtos.UserDto;
 import com.aditya.tutorial.dto.userDtos.UserResponseDto;
 import com.aditya.tutorial.dto.userDtos.UserRoleRequestDto;
+import com.aditya.tutorial.entity.Enums.Roles;
+import com.aditya.tutorial.entity.Team;
 import com.aditya.tutorial.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +32,9 @@ public class UserController {
 //         return new ResponseEntity<>(user, HttpStatus.CREATED);
 //    }
     @GetMapping()
-    public ResponseEntity<PageResponse<UserResponseDto>> getAll(@RequestParam(defaultValue = "id") String sortBy,
+    public ResponseEntity<PageResponse<UserResponseDto>> getAll(@RequestParam(required = false) Roles roles,
+                                                                @RequestParam(required = false) Long teamId,
+                                                                @RequestParam(defaultValue = "id") String sortBy,
                                                                 @RequestParam(defaultValue = "asc") String sortDir,
                                                                 @RequestParam(defaultValue = "0") int pageNo,
                                                                 @RequestParam(defaultValue = "5")int pageSize){
@@ -40,7 +44,7 @@ public class UserController {
                 Sort.by(sortBy).ascending();
 
         Pageable pageable= PageRequest.of(pageNo,pageSize,sort);
-        return new ResponseEntity<>(userService.getAll(pageable),HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAll(roles,teamId,pageable),HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
