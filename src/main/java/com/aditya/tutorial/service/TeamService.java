@@ -1,5 +1,6 @@
 package com.aditya.tutorial.service;
 
+import com.aditya.tutorial.dto.pagination.PageResponse;
 import com.aditya.tutorial.dto.teamDtos.TeamMemberDto;
 import com.aditya.tutorial.dto.teamDtos.TeamResponseDto;
 import com.aditya.tutorial.entity.Team;
@@ -8,6 +9,8 @@ import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.repo.TeamRepo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -30,24 +33,35 @@ public class TeamService {
 
     }
 
-    public List<TeamResponseDto> getAllTeams() {
-        List<Team> teams = teamRepo.findAll();
+    public PageResponse<TeamResponseDto> getAllTeams(Pageable pageable) {
+        Page<Team> page = teamRepo.findAll(pageable);
 
-        return teams.stream()
-                .map(team -> {
+        List<TeamResponseDto> teamResponseDtoList = page.getContent()
+                .stream()
+                .map(this::mapToTeamResponseDto)
+                .toList();
+        PageResponse<TeamResponseDto> pageResponse=new PageResponse<>();
+        pageResponse.setContent(teamResponseDtoList);
+        pageResponse.setPageSize(page.getSize());
+        pageResponse.setPageNo(page.getNumber());
+        pageResponse.setTotalElements(page.getTotalElements());
+        pageResponse.setTotalPages(page.getTotalPages());
+        pageResponse.setLast(page.isLast());
+        return pageResponse;
 
-                    TeamResponseDto teamResponseDto = modelMapper.map(team, TeamResponseDto.class);
+    }
+    private TeamResponseDto mapToTeamResponseDto(Team team) {
 
-                    List<TeamMemberDto> members = team.getUserList()
-                            .stream()
-                            .map(user -> modelMapper.map(user, TeamMemberDto.class))
-                            .collect(Collectors.toList());
+        TeamResponseDto dto = modelMapper.map(team, TeamResponseDto.class);
 
-                    teamResponseDto.setUsers(members);
+        List<TeamMemberDto> members = team.getUserList()
+                .stream()
+                .map(user -> modelMapper.map(user, TeamMemberDto.class))
+                .toList();
 
-                    return teamResponseDto;
-                })
-                .collect(Collectors.toList());
+        dto.setUsers(members);
+
+        return dto;
     }
 
     public boolean deleteTeam(Long id) {
