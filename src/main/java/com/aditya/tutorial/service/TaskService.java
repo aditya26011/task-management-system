@@ -4,6 +4,7 @@ import com.aditya.tutorial.dto.pagination.PageResponse;
 import com.aditya.tutorial.dto.projectDtos.ProjectSummaryDto;
 import com.aditya.tutorial.dto.taskDtos.*;
 import com.aditya.tutorial.dto.userDtos.UserSummaryDto;
+import com.aditya.tutorial.entity.Enums.Priority;
 import com.aditya.tutorial.entity.Enums.Roles;
 import com.aditya.tutorial.entity.Enums.TaskStatus;
 import com.aditya.tutorial.entity.Project;
@@ -16,9 +17,11 @@ import com.aditya.tutorial.repo.ProjectRepo;
 import com.aditya.tutorial.repo.TaskRepo;
 import com.aditya.tutorial.repo.TeamRepo;
 import com.aditya.tutorial.repo.UserRepo;
+import com.aditya.tutorial.specifications.TaskSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -103,9 +106,26 @@ public class TaskService {
         userSummaryDto.setName(user.getName());
         return userSummaryDto;
     }
-    public PageResponse<TaskGetResponseDto> getAllTask(Pageable pageable) {
+    public PageResponse<TaskGetResponseDto> getAllTask(TaskStatus taskStatus, Priority priority,Long projectId, Pageable pageable) {
 
-        Page<Task> page = taskRepo.findAll(pageable);
+        Specification<Task> specification = Specification.unrestricted();
+
+        if(taskStatus!=null){
+            specification=specification.and(TaskSpecification.hasStatus(taskStatus));
+        }
+        if(priority!=null){
+            specification=specification.and(TaskSpecification.hasPriority(priority));
+        }
+        if(projectId!=null){
+            specification=specification.and(TaskSpecification.hasProjectId(projectId));
+        }
+
+        Page<Task> page;
+        if (specification != null) {
+            page = taskRepo.findAll(specification, pageable);
+        } else {
+            page = taskRepo.findAll(pageable);
+        }
 
         List<TaskGetResponseDto> tasks = page.getContent()
                 .stream()

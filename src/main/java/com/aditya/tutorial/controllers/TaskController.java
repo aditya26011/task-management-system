@@ -2,6 +2,8 @@ package com.aditya.tutorial.controllers;
 
 import com.aditya.tutorial.dto.pagination.PageResponse;
 import com.aditya.tutorial.dto.taskDtos.*;
+import com.aditya.tutorial.entity.Enums.Priority;
+import com.aditya.tutorial.entity.Enums.TaskStatus;
 import com.aditya.tutorial.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -9,11 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/task")
@@ -29,8 +29,12 @@ public class TaskController {
         return new ResponseEntity<>(taskResponseDto, HttpStatus.CREATED);
     }
 
-    @GetMapping("/all")
-      public ResponseEntity<PageResponse<TaskGetResponseDto>> getAll(@RequestParam(defaultValue = "id") String sortBy,
+    @GetMapping()
+      public ResponseEntity<PageResponse<TaskGetResponseDto>> getAll(
+                                                                    @RequestParam(required = false) TaskStatus taskStatus,
+                                                                    @RequestParam(required = false) Priority priority,
+                                                                    @RequestParam(required = false) Long projectId,
+                                                                    @RequestParam(defaultValue = "id") String sortBy,
                                                                      @RequestParam(defaultValue = "0") int pageNo,
                                                                      @RequestParam(defaultValue = "5") int pageSize,
                                                                      @RequestParam(defaultValue = "asc")String sortDir){
@@ -40,7 +44,9 @@ public class TaskController {
                 :Sort.by(sortBy).ascending();
 
         Pageable pageable=PageRequest.of(pageNo,pageSize,sort);
-        return ResponseEntity.ok(taskService.getAllTask(pageable));
+        System.out.println("TaskStatus = " + taskStatus);
+        System.out.println("Priority = " + priority);
+        return ResponseEntity.ok(taskService.getAllTask(taskStatus,priority,projectId,pageable));
     }
     @GetMapping("/{id}")
     public ResponseEntity<TaskGetResponseDto> getTaskById(@PathVariable(value = "id")Long id){
