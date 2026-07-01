@@ -4,6 +4,7 @@ import com.aditya.tutorial.dto.pagination.PageResponse;
 import com.aditya.tutorial.dto.projectDtos.ProjectRequestDto;
 import com.aditya.tutorial.dto.projectDtos.ProjectResponseDto;
 import com.aditya.tutorial.dto.projectDtos.UpdateProjectDto;
+import com.aditya.tutorial.entity.Enums.Status;
 import com.aditya.tutorial.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +31,9 @@ public class ProjectController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<PageResponse<ProjectResponseDto>> getAllProject(@RequestParam(defaultValue = "0")int pageNo,
+    public ResponseEntity<PageResponse<ProjectResponseDto>> getAllProject(@RequestParam(required = false)Status status,
+                                                                          @RequestParam(required = false)Long teamId,
+                                                                          @RequestParam(defaultValue = "0")int pageNo,
                                                                           @RequestParam(defaultValue = "5") int pageSize,
                                                                           @RequestParam(defaultValue ="id") String sortBy,
                                                                           @RequestParam(defaultValue = "asc")String sortDir){
@@ -40,7 +43,7 @@ public class ProjectController {
 
         Pageable pageable= PageRequest.of(pageNo,pageSize,sort);
 
-        return new ResponseEntity<>(projectService.getAllProjects(pageable),HttpStatus.OK);
+        return new ResponseEntity<>(projectService.getAllProjects(pageable,status,teamId),HttpStatus.OK);
     }
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponseDto> getProjectById(@PathVariable(value = "id") Long id){

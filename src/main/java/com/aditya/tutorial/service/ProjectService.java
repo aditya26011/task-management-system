@@ -12,10 +12,12 @@ import com.aditya.tutorial.entity.Team;
 import com.aditya.tutorial.exceptions.ResourceNotFoundException;
 import com.aditya.tutorial.repo.ProjectRepo;
 import com.aditya.tutorial.repo.TeamRepo;
+import com.aditya.tutorial.specifications.ProjectSpecification;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -81,9 +83,23 @@ public class ProjectService {
         return projectResponseDto;
     }
 
-    public PageResponse<ProjectResponseDto> getAllProjects(Pageable pageable) {
+    public PageResponse<ProjectResponseDto> getAllProjects(Pageable pageable,Status status,Long teamId) {
 
-     Page<Project> page = projectRepo.findAll(pageable);
+        Specification<Project> specification=Specification.unrestricted();
+        if(status!=null){
+          specification= specification.and(ProjectSpecification.hasStatus(status));
+        }
+        if(teamId!=null){
+            specification=specification.and(ProjectSpecification.hasProjectId(teamId));
+        }
+        Page<Project>page;
+
+        if(specification!=null){
+            page=projectRepo.findAll(specification,pageable);
+        }else{
+            page=projectRepo.findAll(pageable);
+        }
+
     List<ProjectResponseDto>projectList= page.getContent().stream().map(this::mapToProjectResponseDto).toList();
 
     PageResponse<ProjectResponseDto> pageResponse=new PageResponse<>();
