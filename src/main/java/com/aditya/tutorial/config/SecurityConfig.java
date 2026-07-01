@@ -28,7 +28,10 @@ public class SecurityConfig{
                 //Auth APIs
                 auth.requestMatchers("/auth/**")
                         .permitAll()
-
+                        .requestMatchers("/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html")
+                        .permitAll()
                         //Admin APIs
 //                        .requestMatchers(HttpMethod.PATCH,"/user/**")
 //                        .hasRole(ADMIN.name())
