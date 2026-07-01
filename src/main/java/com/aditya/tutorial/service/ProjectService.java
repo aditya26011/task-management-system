@@ -1,6 +1,7 @@
 package com.aditya.tutorial.service;
 
 
+import com.aditya.tutorial.dto.pagination.PageResponse;
 import com.aditya.tutorial.dto.projectDtos.ProjectRequestDto;
 import com.aditya.tutorial.dto.projectDtos.ProjectResponseDto;
 import com.aditya.tutorial.dto.projectDtos.UpdateProjectDto;
@@ -13,6 +14,8 @@ import com.aditya.tutorial.repo.ProjectRepo;
 import com.aditya.tutorial.repo.TeamRepo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -78,9 +81,18 @@ public class ProjectService {
         return projectResponseDto;
     }
 
-    public List<ProjectResponseDto> getAllProjects() {
-     List<Project> projectList = projectRepo.findAll();
-    return projectList.stream().map(this::mapToProjectResponseDto).toList();
+    public PageResponse<ProjectResponseDto> getAllProjects(Pageable pageable) {
+
+     Page<Project> page = projectRepo.findAll(pageable);
+    List<ProjectResponseDto>projectList= page.getContent().stream().map(this::mapToProjectResponseDto).toList();
+
+    PageResponse<ProjectResponseDto> pageResponse=new PageResponse<>();
+    pageResponse.setContent(projectList);
+    pageResponse.setPageNo(page.getNumber());
+    pageResponse.setPageSize(page.getSize());
+    pageResponse.setTotalPages(page.getTotalPages());
+    pageResponse.setLast(page.isLast());
+    return pageResponse;
 
     }
 
