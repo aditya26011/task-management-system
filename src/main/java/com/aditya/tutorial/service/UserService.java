@@ -1,5 +1,6 @@
 package com.aditya.tutorial.service;
 
+import com.aditya.tutorial.dto.pagination.PageResponse;
 import com.aditya.tutorial.dto.teamDtos.AddTeamDto;
 import com.aditya.tutorial.dto.userDtos.UserDto;
 import com.aditya.tutorial.dto.userDtos.UserResponseDto;
@@ -14,6 +15,9 @@ import com.aditya.tutorial.repo.TeamRepo;
 import com.aditya.tutorial.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,14 +50,25 @@ public class UserService {
 //
 //    }
 
-    public List<UserResponseDto> getAll() {
+    public PageResponse<UserResponseDto> getAll(Pageable pageable) {
 
-     List<User> users=userRepo.findAll();
 
-     return users.stream().map((element) -> modelMapper.map(element, UserResponseDto.class)).collect(Collectors.toList());
 
+     Page<User> page=userRepo.findAll(pageable);
+
+     List<UserResponseDto> userList= page.getContent().stream().map((element) -> modelMapper.map(element, UserResponseDto.class)).toList();
+        PageResponse<UserResponseDto> pageResponse=new PageResponse<>();
+        pageResponse.setContent(userList);
+        pageResponse.setPageSize(page.getSize());
+        pageResponse.setPageNo(page.getNumber());
+        pageResponse.setTotalElements(page.getTotalElements());
+        pageResponse.setTotalPages(page.getTotalPages());
+        pageResponse.setLast(page.isLast());
+
+        return pageResponse;
     }
 
+    @Cacheable(cacheNames="users",key ="#id")
     public UserResponseDto getEmpById(Long id) {
         User employee = userRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("User Not Found"));
         return modelMapper.map(employee, UserResponseDto.class);

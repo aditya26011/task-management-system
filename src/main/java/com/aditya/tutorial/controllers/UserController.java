@@ -1,11 +1,15 @@
 package com.aditya.tutorial.controllers;
 
+import com.aditya.tutorial.dto.pagination.PageResponse;
 import com.aditya.tutorial.dto.teamDtos.AddTeamDto;
 import com.aditya.tutorial.dto.userDtos.UserDto;
 import com.aditya.tutorial.dto.userDtos.UserResponseDto;
 import com.aditya.tutorial.dto.userDtos.UserRoleRequestDto;
 import com.aditya.tutorial.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +30,17 @@ public class UserController {
 //         return new ResponseEntity<>(user, HttpStatus.CREATED);
 //    }
     @GetMapping()
-    public ResponseEntity<List<UserResponseDto>> getAll(){
-        List<UserResponseDto> userResponseDto=userService.getAll();
-        return new ResponseEntity<>(userResponseDto,HttpStatus.OK);
+    public ResponseEntity<PageResponse<UserResponseDto>> getAll(@RequestParam(defaultValue = "id") String sortBy,
+                                                                @RequestParam(defaultValue = "asc") String sortDir,
+                                                                @RequestParam(defaultValue = "0") int pageNo,
+                                                                @RequestParam(defaultValue = "5")int pageSize){
+
+        Sort sort=sortDir.equalsIgnoreCase("desc")?
+                Sort.by(sortBy).descending():
+                Sort.by(sortBy).ascending();
+
+        Pageable pageable= PageRequest.of(pageNo,pageSize,sort);
+        return new ResponseEntity<>(userService.getAll(pageable),HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
